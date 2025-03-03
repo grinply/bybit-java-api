@@ -42,9 +42,9 @@ Maven Example
 ```
 Gradle Example
 ```java
-implementation group: 'io.github.wuhewuhe', name: 'bybit-java-api', version: '1.0.0'
+implementation group: 'com.grinply', name: 'bybit-java-api', version: '1.0.0'
 ```
-Furthermore, build tool, please check [sonar type central repository](https://central.sonatype.com/artifact/io.github.wuhewuhe/bybit-java-api/1.2.3)
+Furthermore, build tool, please check [sonar type central repository](https://central.sonatype.com/artifact/com.grinply/bybit-java-api/1.2.3)
 
 ## Release-Notes
 ### Rest API
