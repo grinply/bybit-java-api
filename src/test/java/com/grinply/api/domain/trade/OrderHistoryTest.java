@@ -5,12 +5,14 @@ import com.grinply.api.client.domain.CategoryType;
 import com.grinply.api.client.domain.trade.request.TradeOrderRequest;
 import com.grinply.api.client.restApi.BybitApiTradeRestClient;
 import com.grinply.api.client.service.BybitApiClientFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class OrderHistoryTest {
     BybitApiTradeRestClient client = BybitApiClientFactory.newInstance("d08Wh6P037IXAvcrL2", "gLfd1BLGU9oq6YoRZRlwXkIQRYB4n5KvXDvv", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();
 
     @Test
+    @Ignore // TODO: replace credentials since they are not working
     public void Test_GetSpotOrderHistoryWithCursor(){
         var orderHistoryRequest = TradeOrderRequest.builder().category(CategoryType.SPOT)
                 .cursor("1659014836933362176%3A1712505980064%2C1659014836933362176%3A1712505980064")

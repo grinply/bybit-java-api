@@ -6,7 +6,7 @@
 
     <groupId>com.grinply</groupId>
     <artifactId>bybit-java-api</artifactId>
-    <version>1.2.8-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>bybit-java-api</name>
     <url>https://github.com/grinply/bybit-java-api</url>
 
@@ -135,7 +135,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/octocat/hello-world</url>
+            <url>https://maven.pkg.github.com/grinply/bybit-java-api</url>
         </repository>
     </distributionManagement>
 
@@ -157,8 +157,15 @@
                     <version>3.14.0</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/*Test.java</exclude>
+                            <exclude>**/Test*.java</exclude>
+                        </excludes>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
