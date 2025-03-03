@@ -1,7 +1,6 @@
 # bybit-java-api
 ## Table of Contents
 - [About](#about)
-- [Development](#development)
 - [Installation](#installation)
 - [Release Notes](#release-notes)
 - [Usage](#usage)
@@ -19,14 +18,7 @@ Dive into a plethora of functionalities:
 - Lending Institution and Client
 - Broker Earning Data
 
-bybit-java-api provides an official, robust, and high-performance Java connector to Bybit's trading APIs. 
-
-Initially conceptualized by Java developer Victor, this module is now maintained by Bybit's in-house Java experts. 
-
-Your contributions are most welcome!
-
-## Development
-bybit-java-api is under active development with the latest features and updates from Bybit's API implemented promptly. The module utilizes minimal external libraries to provide a lightweight and efficient experience. If you've made enhancements or fixed bugs, please submit a pull request.
+bybit-java-api an custom, robust, and high-performance Java connector to Bybit's trading APIs. 
 
 ## Installation
 Ensure you have Java 22 or higher. You can include bybit-java-api in your project using Maven or Gradle.
