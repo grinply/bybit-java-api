@@ -5,7 +5,7 @@
 - [Release Notes](#release-notes)
 - [Usage](#usage)
 ## About
-The Official Java API connector for Bybit's HTTP and WebSocket APIs.
+An custom made Java API connector for Bybit's HTTP and WebSocket APIs.
 
 Dive into a plethora of functionalities:
 - Market Data Retrieval
