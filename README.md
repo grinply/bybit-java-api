@@ -1,5 +1,5 @@
 # bybit-java-api
-[![Java 11](https://img.shields.io/badge/Java-11-brightgreen.svg)](https://github.com/wuhewuhe/bybit-java-api)   [![Contributor Victor](https://img.shields.io/badge/contributor-Victor-blue.svg)](https://github.com/wuhewuhe/bybit-java-api)   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/wuhewuhe/bybit-java-api/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/wuhewuhe/bybit-java-api/blob/main/LICENSE)
 ## Table of Contents
 - [About](#about)
 - [Development](#development)
@@ -32,20 +32,20 @@ Your contributions are most welcome!
 bybit-java-api is under active development with the latest features and updates from Bybit's API implemented promptly. The module utilizes minimal external libraries to provide a lightweight and efficient experience. If you've made enhancements or fixed bugs, please submit a pull request.
 
 ## Installation
-Ensure you have Java 11 or higher. You can include bybit-java-api in your project using Maven or Gradle.
+Ensure you have Java 22 or higher. You can include bybit-java-api in your project using Maven or Gradle.
 
 Maven Example
 ```java
 <!-- Maven -->
 <dependency>
-    <groupId>io.github.wuhewuhe</groupId>
+    <groupId>com.grinply</groupId>
     <artifactId>bybit-java-api</artifactId>
-    <version>1.2.8</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 Gradle Example
 ```java
-implementation group: 'io.github.wuhewuhe', name: 'bybit-java-api', version: '1.2.8'
+implementation group: 'io.github.wuhewuhe', name: 'bybit-java-api', version: '1.0.0'
 ```
 Furthermore, build tool, please check [sonar type central repository](https://central.sonatype.com/artifact/io.github.wuhewuhe/bybit-java-api/1.2.3)
 
@@ -246,25 +246,3 @@ var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET"
 // Order
 client.getPrivateChannelStream(List.of("order"), BybitApiConfig.V5_PRIVATE);
 ```
-
-## Contact
-For support, join our Bybit API community on [Telegram](https://t.me/Bybitapi).
-
-## Contributors
-List of other contributors
-<table>
-  <tr>
-    <td align="center">
-        <a href="https://github.com/wuhewuhe">
-            <img src="https://avatars.githubusercontent.com/u/32245754?v=4" width="100px;" alt=""/>
-            <br />
-            <sub>   
-                <b>Victor</b>
-            </sub>
-        </a>
-        <br />
-        <a href="https://github.com/wuhewuhe/bybit-java-api/commits?author=wuhewuhe" title="Code">💻</a>
-        <a href="https://github.com/wuhewuhe/bybit-java-api/commits?author=wuhewuhe" title="Documentation">📖</a>
-    </td>
-  </tr>
-</table>
