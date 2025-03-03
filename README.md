@@ -1,13 +1,10 @@
 # bybit-java-api
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/wuhewuhe/bybit-java-api/blob/main/LICENSE)
 ## Table of Contents
 - [About](#about)
 - [Development](#development)
 - [Installation](#installation)
 - [Release Notes](#release-notes)
 - [Usage](#usage)
-- [Contact](#contact)
-- [Contributors](#contributors)
 ## About
 The Official Java API connector for Bybit's HTTP and WebSocket APIs.
 
