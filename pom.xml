@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.wuhewuhe</groupId>
+    <groupId>com.grinply</groupId>
     <artifactId>bybit-java-api</artifactId>
     <version>1.2.8-SNAPSHOT</version>
     <name>bybit-java-api</name>
@@ -17,8 +17,7 @@
         </license>
     </licenses>
 
-    <description>The Official Java API connector for Bybit's HTTP and WebSocket APIs.
-
+    <description>Custom Java API connector for Bybit's HTTP and WebSocket APIs.
         Dive into a plethora of functionalities:
         - Market Data Retrieval
         - Trade Execution
@@ -28,31 +27,12 @@
         — Public Websocket Streaming
         - Private Websocket Streaming
         - Lending Institution and Client
-        - Broker Earning Data</description>
+        - Broker Earning Data
+    </description>
 
-    <developers>
-        <developer>
-            <id>developerId</id>
-            <name>Victor</name>
-            <email>dachichiwuhe@gmail.com</email>
-            <organization>bybit-exchange</organization>
-            <organizationUrl>https://www.bybit.com/en-US/</organizationUrl>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>Europe/Paris</timezone>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git:git://github.com/VictorFrWu/bybit-java-api.git</connection>
-        <developerConnection>scm:git:ssh://github.com/VictorFrWu/bybit-java-api.git</developerConnection>
-        <url>https://github.com/VictorFrWu/bybit-java-api</url>
-    </scm>
 
     <properties>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.release>22</maven.compiler.release>
         <com.squareup.retrofit2.version>2.7.2</com.squareup.retrofit2.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -119,8 +99,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
-            <scope>provided</scope>
+            <version>1.18.36</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -153,98 +132,56 @@
     </dependencies>
 
     <distributionManagement>
-                           <snapshotRepository>
-                               <id>ossrh</id>
-                               <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-                               </snapshotRepository>
-                           <repository>
-                               <id>ossrh</id>
-                               <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                           </repository>
-
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/octocat/hello-world</url>
+        </repository>
     </distributionManagement>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <configuration>
-                </configuration>
-            </plugin>
-
-            <!-- Nexus Repository Manager -->
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
-
-            <!-- Javadoc and Sources Attachments -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <links>
-                        <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
-                    </links>
-                </configuration>
-            </plugin>
-
-            <!-- GPG Signed Components -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-        </plugins>
+        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (can be moved to parent pom) -->
+            <plugins>
+                <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.3.2</version>
+                </plugin>
+                <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.14.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.2.5</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.4.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+                <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>4.0.0-M13</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
