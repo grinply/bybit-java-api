@@ -31,6 +31,7 @@ public class PositionData {
     private String stopLoss;
     private String trailingStop;
     private String unrealisedPnl;
+    private String curRealisedPnl;
     private String cumRealisedPnl;
     private String positionStatus;
     private Integer adlRankIndicator;
