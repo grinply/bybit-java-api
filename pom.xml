@@ -4,18 +4,26 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.grinply</groupId>
+    <groupId>io.github.grinply</groupId>
     <artifactId>bybit-java-api</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>bybit-java-api</name>
-    <url>https://github.com/grinply/bybit-git java-api</url>
+    <packaging>jar</packaging>
+    <url>https://github.com/grinply/bybit-java-api</url>
 
     <licenses>
         <license>
             <name>The MIT License</name>
             <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/grinply/bybit-java-api.git</connection>
+        <developerConnection>scm:git:ssh://github.com/grinply/bybit-java-api.git</developerConnection>
+        <url>https://github.com/grinply/bybit-java-api</url>
+    </scm>
 
     <description>Custom Java API connector for Bybit's HTTP and WebSocket APIs.
         Dive into a plethora of functionalities:
@@ -30,11 +38,19 @@
         - Broker Earning Data
     </description>
 
+    <developers>
+        <developer>
+            <name>Developer</name>
+            <email>contato@grinply.com</email>
+            <organization>Grinply</organization>
+        </developer>
+    </developers>
 
     <properties>
         <maven.compiler.release>22</maven.compiler.release>
         <com.squareup.retrofit2.version>2.7.2</com.squareup.retrofit2.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <gpg.keyname>F1E75828651ED0B4</gpg.keyname>
     </properties>
 
     <dependencies>
@@ -133,15 +149,73 @@
 
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/grinply/bybit-java-api</url>
+            <id>central</id>
+            <url>https://central.sonatype.com/service/local/staging/deploy/maven2/</url>
         </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>https://central.sonatype.com/content/repositories/snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <build>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (can be moved to parent pom) -->
             <plugins>
+                <!-- This plugin helps to deploy lib to central maven -->
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.7.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>central</publishingServerId>
+                        <autoPublish>true</autoPublish>
+                        <waitUntil>published</waitUntil>
+                    </configuration>
+                </plugin>
+                <!-- This plugin helps to deploy lib to central maven -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+<!--                    <version>1.cat5</version>-->
+                    <version>1.6</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!--  Maven Central requires both JavaDocs and Source JARs for your library.-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.4.0</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
                 <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
@@ -173,10 +247,6 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
                     <version>3.1.2</version>
                 </plugin>
                 <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
