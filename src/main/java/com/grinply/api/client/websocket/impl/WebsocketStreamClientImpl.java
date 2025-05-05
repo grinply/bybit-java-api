@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grinply.api.client.config.BybitApiConfig;
 import com.grinply.api.client.security.HmacSHA256Signer;
-import lombok.Getter;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +45,7 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
     private final Integer pingInterval;
     private final String maxAliveTime;
     private List<String> argNames;
-    private Map<String,Object> params;
+    private Map<String, Object> params;
     private String path;
 
     public WebsocketStreamClientImpl(String apikey, String secret, String baseUrl, Integer pingInterval, String maxAliveTime, Boolean debugMode, String logOption, WebSocketMessageCallback webSocketMessageCallback) {
@@ -66,7 +65,7 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
         this.path = path;
     }
 
-    private void setupChannelStream(Map<String,Object> params, String path) {
+    private void setupChannelStream(Map<String, Object> params, String path) {
         this.params = new HashMap<>(params);
         this.path = path;
     }
@@ -81,7 +80,7 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
         }
     }
 
-    public void sendSubscribeMessage(WebSocket ws, Map<String,Object> params) {
+    public void sendSubscribeMessage(WebSocket ws, Map<String, Object> params) {
         if (!isAuthenticated) {
             // If not authenticated, queue the message
             LOGGER.info("Queueing message until authentication is complete.");
@@ -105,9 +104,9 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
     @NotNull
     private Map<String, Object> createSubscribeMessage(List<String> args) {
         Map<String, Object> wsPostMsg = new LinkedHashMap<>();
-            wsPostMsg.put("req_id", generateTransferID());
-            wsPostMsg.put("op", "subscribe");
-            wsPostMsg.put("args", args); // Ensure argNames is correctly formatted for subscription messages
+        wsPostMsg.put("req_id", generateTransferID());
+        wsPostMsg.put("op", "subscribe");
+        wsPostMsg.put("args", args); // Ensure argNames is correctly formatted for subscription messages
         return wsPostMsg;
     }
 
@@ -121,8 +120,8 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
         return wsPostMsg;
     }
 
-    private List<Map<String, Object>> constructWsAPIArgs(Map<String,Object> originalParams) {
-        Map<String,Object> params = new HashMap<>(originalParams); // Create a mutable copy
+    private List<Map<String, Object>> constructWsAPIArgs(Map<String, Object> originalParams) {
+        Map<String, Object> params = new HashMap<>(originalParams); // Create a mutable copy
         // Remove specified keys
         params.remove(BybitApiConstants.TIMESTAMP_HEADER);
         params.remove("reqId");
@@ -131,12 +130,12 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
         return Collections.singletonList(params);
     }
 
-    private Map<String, String> constructWsAPIHeaders(Map<String,Object> params) {
-        Map<String,String> headerMap = new HashMap<>();
+    private Map<String, String> constructWsAPIHeaders(Map<String, Object> params) {
+        Map<String, String> headerMap = new HashMap<>();
         headerMap.put(BybitApiConstants.TIMESTAMP_HEADER, String.valueOf(generateTimestamp()));
         headerMap.put(BybitApiConstants.RECV_WINDOW_HEADER, params.getOrDefault(BybitApiConstants.RECV_WINDOW_HEADER, BybitApiConstants.DEFAULT_RECEIVING_WINDOW).toString());
         // Check broker referral code
-        if(params.containsKey(BybitApiConstants.BROKER_HEADER))
+        if (params.containsKey(BybitApiConstants.BROKER_HEADER))
             headerMap.put(BybitApiConstants.BROKER_HEADER, params.get(BybitApiConstants.BROKER_HEADER).toString());
         return headerMap;
     }
@@ -149,15 +148,14 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
                 BybitApiConfig.V3_SPOT_PRIVATE.equals(path);*/
     }
 
-    @NotNull
-    private Thread createPingThread() {
-        return new Thread(() -> {
+    private void startPingThread() {
+        Thread.startVirtualThread(() -> {
             try {
                 // check if the WebSocket is still valid
                 while (this.webSocket != null) {
-                        webSocket.send(PING_DATA);
-                        LOGGER.info(PING_DATA);
-                        TimeUnit.SECONDS.sleep(pingInterval); // waits for 10 seconds before the next iteration
+                    webSocket.send(PING_DATA);
+                    LOGGER.info(PING_DATA);
+                    TimeUnit.SECONDS.sleep(pingInterval); // waits for 10 seconds before the next iteration
                 }
             } catch (InterruptedException e) {
                 LOGGER.error("Ping thread was interrupted", e);
@@ -182,8 +180,8 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
     }
 
     @NotNull
-    private Thread createAuthThread(WebSocket ws, Runnable afterAuth) {
-        return new Thread(() -> {
+    private void startAuthThread(WebSocket ws, Runnable afterAuth) {
+        Thread.startVirtualThread(() -> {
             try {
                 sendAuthMessage(ws);
                 if (afterAuth != null) {
@@ -272,7 +270,7 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
                 LOGGER.error("Authentication failed.");
             }
         }
-        
+
         if (webSocketMessageCallback != null) {
             webSocketMessageCallback.onMessage(msg);
         } else {
@@ -282,7 +280,7 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
 
     @Override
     public void onError(Throwable t) {
-        LOGGER.error(t.getMessage());
+        LOGGER.error("WebSocket error {} happened to stream {}", t, argNames);
     }
 
     @Override
@@ -296,17 +294,16 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
     public void onOpen(WebSocket ws) {
         // If it requires authentication, authenticate first, then subscribe.
         if (requiresAuthentication(path)) {
-            Thread authThread = createAuthThread(ws, () -> {
+            startAuthThread(ws, () -> {
                 // After auth, trade api
-                if(path.equals(BybitApiConfig.V5_TRADE)){
+                if (path.equals(BybitApiConfig.V5_TRADE)) {
                     sendSubscribeMessage(ws, params);
                 }
                 // After auth, send a subscribed message
-                else{
+                else {
                     sendSubscribeMessage(ws, argNames);
                 }
             });
-            authThread.start();
         } else {
             // If no authentication is needed, just send the subscribed message.
             sendSubscribeMessage(ws, argNames);
@@ -318,11 +315,8 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
         String wssUrl = getWssUrl();
         LOGGER.info(wssUrl);
         this.webSocket = webSocketHttpClientSingleton.createWebSocket(wssUrl, createWebSocketListener());
-
         // Start the ping thread immediately.
-        Thread pingThread = createPingThread();
-        pingThread.setName(THREAD_PING); // Default to public ping name
-        pingThread.start();
+        startPingThread();
         return this.webSocket;
     }
 
@@ -339,7 +333,7 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
     }
 
     @Override
-    public WebSocket getTradeChannelStream(Map<String,Object> params, String path) {
+    public WebSocket getTradeChannelStream(Map<String, Object> params, String path) {
         setupChannelStream(params, path);
         return connect();
     }
