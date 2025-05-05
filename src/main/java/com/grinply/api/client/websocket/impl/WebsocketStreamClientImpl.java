@@ -150,7 +150,7 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
     }
 
     private void startPingThread() {
-        Thread.startVirtualThread(() -> {
+        Thread.ofVirtual().name(THREAD_PING).start(() -> {
             try {
                 // check if the WebSocket is still valid
                 while (this.webSocket != null) {
@@ -180,9 +180,8 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
         sendJsonMessage(ws, authMessage, "Auth");
     }
 
-    @NotNull
     private void startAuthThread(WebSocket ws, Runnable afterAuth) {
-        Thread.startVirtualThread(() -> {
+        Thread.ofVirtual().name(THREAD_PRIVATE_AUTH).start(() -> {
             try {
                 sendAuthMessage(ws);
                 if (afterAuth != null) {
