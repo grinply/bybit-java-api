@@ -27,7 +27,7 @@ Maven Example
 ```java
 <!-- Maven -->
 <dependency>
-    <groupId>com.grinply</groupId>
+    <groupId>io.github.grinply</groupId>
     <artifactId>bybit-java-api</artifactId>
     <version>1.0.1</version>
 </dependency>
@@ -36,7 +36,7 @@ Gradle Example
 ```java
 implementation group: 'com.grinply', name: 'bybit-java-api', version: '1.0.1'
 ```
-Furthermore, build tool, please check [sonar type central repository](https://central.sonatype.com/artifact/com.grinply/bybit-java-api/1.2.3)
+Furthermore, build tool, please check [sonar type central repository](https://central.sonatype.com/artifact/io.github.grinply/bybit-java-api)
 
 ## Release-Notes
 ### Rest API
