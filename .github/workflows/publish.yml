@@ -22,6 +22,7 @@ jobs:
         run: |
           cat <(echo -e "${{ secrets.GPG_SECRET_KEY }}") | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
+          gpg --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSWORD_KEY }}" --sign teste.txt
       - id: publish-to-central
         name: Publish to Central Repository
         env:
