@@ -19,18 +19,23 @@ jobs:
           distribution: 'corretto'
       - id: install-secret-key
         name: Install gpg secret key
+        env:
+          GPG_PASSWORD_KEY: ${{ secrets.GPG_PASSWORD_KEY }}
         run: |
           cat <(echo -e "${{ secrets.GPG_SECRET_KEY }}") | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
-          gpg --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSWORD_KEY }}" --sign README.md
+          gpg --pinentry-mode loopback --passphrase "$GPG_PASSWORD_KEY" --sign README.md
       - id: publish-to-central
         name: Publish to Central Repository
         env:
           MAVEN_USERNAME: ${{ secrets.CENTRAL_MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.CENTRAL_MAVEN_PASSWORD }}
+          GPG_PASSWORD_KEY: ${{ secrets.GPG_PASSWORD_KEY }}
+          GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
         run: |
           mvn \
-            -Dgpg.keyname=${{ secrets.GPG_KEY_NAME }} \
-            -Dgpg.passphrase=${{ secrets.GPG_PASSWORD_KEY }} \
+            -Dgpg.passphrase="$GPG_PASSWORD_KEY" \
+            -Dgpg.keyname="$GPG_KEY_NAME" \
+            -Dgpg.arguments="--pinentry-mode loopback" \
             -DskipTests \
             clean deploy
