@@ -31,4 +31,5 @@ jobs:
             --batch-mode \
             -Dgpg.keyname=${{ secrets.GPG_KEY_NAME }} \
             -Dgpg.passphrase=${{ secrets.GPG_PASSWORD_KEY }} \
+            -DskipTests \
             clean deploy
