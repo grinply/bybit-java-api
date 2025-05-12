@@ -1,8 +1,10 @@
 name: Publish package to GitHub Packages
 on:
   push:
-    tags:
+    branches:
       - '*'
+    # tags:
+    #   - '*'
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -18,16 +20,16 @@ jobs:
       - id: install-secret-key
         name: Install gpg secret key
         run: |
-          cat <(echo -e "${{ secrets.GPG_SECRET_KEY }}") | awk '{gsub(/\\n/,"\n")}1' | gpg --batch --import
+          cat <(echo -e "${{ secrets.GPG_SECRET_KEY }}") | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
-      - id: publish-to-central
-        name: Publish to Central Repository
-        env:
-          MAVEN_USERNAME: ${{ secrets.CENTRAL_MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.CENTRAL_MAVEN_PASSWORD }}
-        run: |
-          mvn \
-            -Dgpg.keyname=${{ secrets.GPG_KEY_NAME }} \
-            -Dgpg.passphrase=${{ secrets.GPG_PASSWORD_KEY }} \
-            -DskipTests \
-            clean deploy
+      # - id: publish-to-central
+      #   name: Publish to Central Repository
+      #   env:
+      #     MAVEN_USERNAME: ${{ secrets.CENTRAL_MAVEN_USERNAME }}
+      #     MAVEN_PASSWORD: ${{ secrets.CENTRAL_MAVEN_PASSWORD }}
+      #   run: |
+      #     mvn \
+      #       -Dgpg.keyname=${{ secrets.GPG_KEY_NAME }} \
+      #       -Dgpg.passphrase=${{ secrets.GPG_PASSWORD_KEY }} \
+      #       -DskipTests \
+      #       clean deploy
