@@ -37,6 +37,8 @@ jobs:
           GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
         run: |
           mvn \
+             --no-transfer-progress \
+             --batch-mode \
             -Dgpg.passphrase="$GPG_PASSWORD_KEY" \
             -Dgpg.keyname="$GPG_KEY_NAME" \
             -Dgpg.arguments="--pinentry-mode loopback" \
