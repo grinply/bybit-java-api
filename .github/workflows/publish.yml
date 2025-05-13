@@ -35,6 +35,7 @@ jobs:
           GPG_PASSWORD_KEY: ${{ secrets.GPG_PASSWORD_KEY }}
           GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
         run: |
+          cat /home/runner/.m2/settings.xml
           mvn \
              --no-transfer-progress \
              --batch-mode \
