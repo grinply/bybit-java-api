@@ -18,8 +18,6 @@ jobs:
           java-version: '22'
           distribution: 'corretto'
           server-id: central
-          server-username: "${{ secrets.CENTRAL_MAVEN_USERNAME }}"
-          server-password: "${{ secrets.CENTRAL_MAVEN_PASSWORD }}"
       - id: install-secret-key
         name: Install gpg secret key
         env:
@@ -30,9 +28,10 @@ jobs:
           gpg --pinentry-mode loopback --passphrase "$GPG_PASSWORD_KEY" --sign README.md
       - id: publish-to-central
         name: Publish to Central Repository
+        bash: shell
         env:
-          MAVEN_USERNAME: "${{ secrets.CENTRAL_MAVEN_USERNAME }}"
-          MAVEN_PASSWORD: "${{ secrets.CENTRAL_MAVEN_PASSWORD }}"
+          CENTRAL_MAVEN_USERNAME: ${{ secrets.CENTRAL_MAVEN_USERNAME }}
+          CENTRAL_MAVEN_PASSWORD: ${{ secrets.CENTRAL_MAVEN_PASSWORD }}
           GPG_PASSWORD_KEY: ${{ secrets.GPG_PASSWORD_KEY }}
           GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
         run: |
@@ -43,4 +42,6 @@ jobs:
             -Dgpg.keyname="$GPG_KEY_NAME" \
             -Dgpg.arguments="--pinentry-mode loopback" \
             -DskipTests \
+            -Dcentral.username="$CENTRAL_MAVEN_USERNAME" \
+            -Dcentral.password="$CENTRAL_MAVEN_PASSWORD" \
             clean deploy
