@@ -18,6 +18,8 @@ jobs:
           java-version: '22'
           distribution: 'corretto'
           server-id: central
+          server-username: "${{ secrets.CENTRAL_MAVEN_USERNAME }}"
+          server-password: "${{ secrets.CENTRAL_MAVEN_PASSWORD }}"
       - id: install-secret-key
         name: Install gpg secret key
         env:
@@ -28,7 +30,6 @@ jobs:
           gpg --pinentry-mode loopback --passphrase "$GPG_PASSWORD_KEY" --sign README.md
       - id: publish-to-central
         name: Publish to Central Repository
-        shell: bash
         env:
           CENTRAL_MAVEN_USERNAME: ${{ secrets.CENTRAL_MAVEN_USERNAME }}
           CENTRAL_MAVEN_PASSWORD: ${{ secrets.CENTRAL_MAVEN_PASSWORD }}
