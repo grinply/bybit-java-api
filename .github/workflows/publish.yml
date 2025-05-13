@@ -1,10 +1,7 @@
 name: Publish package to GitHub Packages
 on:
-  push:
-    branches:
-      - '*'
-    # tags:
-    #   - '*'
+  release:
+    types: [created]
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -36,7 +33,6 @@ jobs:
           GPG_PASSWORD_KEY: ${{ secrets.GPG_PASSWORD_KEY }}
           GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
         run: |
-          cat /home/runner/.m2/settings.xml
           mvn \
              --no-transfer-progress \
              --batch-mode \
@@ -44,6 +40,4 @@ jobs:
             -Dgpg.keyname="$GPG_KEY_NAME" \
             -Dgpg.arguments="--pinentry-mode loopback" \
             -DskipTests \
-            -Dcentral.username="$CENTRAL_MAVEN_USERNAME" \
-            -Dcentral.password="$CENTRAL_MAVEN_PASSWORD" \
             clean deploy
