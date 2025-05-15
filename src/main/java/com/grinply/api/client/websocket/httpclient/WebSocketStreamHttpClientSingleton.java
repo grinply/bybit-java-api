@@ -6,6 +6,8 @@ import okhttp3.Request;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.grinply.api.client.log.Slf4jLoggingInterceptor.HandleLoggingInterceptor;
 
 @Getter
@@ -23,7 +25,9 @@ public final class WebSocketStreamHttpClientSingleton {
     }
 
     public OkHttpClient createOkHttpClient(boolean debugMode, String logOption) {
-        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS);
         if (debugMode) {
             HandleLoggingInterceptor(clientBuilder, logOption);
         }
