@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
+
+import java.net.SocketException;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -233,7 +235,15 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
             public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
                 try {
                     WebsocketStreamClientImpl.this.onMessage(text);
-                } catch (Exception e) {
+                }
+                catch (SocketException e) {
+                    //IDE says it won't happen but since we're receiving abruptly interrupt it's a good try (maybe wrong spot)
+                    LOGGER.error("Some exception happened, reseting it: ");
+                    // reopen connection
+                    WebsocketStreamClientImpl.this.onOpen(webSocket);
+                }
+                catch (Exception e) {
+                    LOGGER.error("This was triggered on onMessage: ");
                     WebsocketStreamClientImpl.this.onError(e);
                 }
             }
