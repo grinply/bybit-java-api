@@ -231,8 +231,9 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
                 WebsocketStreamClientImpl.this.onError(webSocket, t);
                 if (t instanceof SocketException) {
                     LOGGER.error("Trying to open a new connection in same wsocket: ", t);
-                    WebsocketStreamClientImpl.this.onOpen(webSocket);
+                    WebsocketStreamClientImpl.this.onClose(webSocket, 0, "Socket Exception caused by server");
                 }
+                reconnect();
             }
 
             @Override
@@ -240,12 +241,7 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
                 try {
                     WebsocketStreamClientImpl.this.onMessage(text);
                 } catch (Exception e) {
-                    LOGGER.error("onMessage exception triggered: {}", e.getMessage());
                     WebsocketStreamClientImpl.this.onError(webSocket, e);
-                    if (e instanceof SocketException) {
-                        LOGGER.error("Trying to open a new connection in same wsocket: ", e);
-                        WebsocketStreamClientImpl.this.onOpen(webSocket);
-                    }
                 }
             }
 
@@ -329,6 +325,27 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
         // Start the ping thread immediately.
         startPingThread();
         return this.webSocket;
+    }
+
+    private synchronized void reconnect() {
+        try {
+            // Reconnect to the same stream
+            if (requiresAuthentication(path)) {
+                if (path.equals(BybitApiConfig.V5_TRADE) && params != null) {
+                    getTradeChannelStream(params, path);
+                } else if (argNames != null) {
+                    getPrivateChannelStream(argNames, path);
+                }
+            } else {
+                if (argNames != null) {
+                    getPublicChannelStream(argNames, path);
+                } else {
+                    LOGGER.warn("No args provided for public stream. Cannot reconnect.");
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Reconnect failed", e);
+        }
     }
 
     @Override
