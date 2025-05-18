@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
+
+import java.net.SocketException;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -226,7 +228,11 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
 
             @Override
             public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
-                WebsocketStreamClientImpl.this.onError(t);
+                WebsocketStreamClientImpl.this.onError(webSocket, t);
+                if (t instanceof SocketException) {
+                    LOGGER.error("Trying to open a new connection in same wsocket: ", t);
+                    WebsocketStreamClientImpl.this.onOpen(webSocket);
+                }
             }
 
             @Override
@@ -234,7 +240,12 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
                 try {
                     WebsocketStreamClientImpl.this.onMessage(text);
                 } catch (Exception e) {
-                    WebsocketStreamClientImpl.this.onError(e);
+                    LOGGER.error("onMessage exception triggered: {}", e.getMessage());
+                    WebsocketStreamClientImpl.this.onError(webSocket, e);
+                    if (e instanceof SocketException) {
+                        LOGGER.error("Trying to open a new connection in same wsocket: ", e);
+                        WebsocketStreamClientImpl.this.onOpen(webSocket);
+                    }
                 }
             }
 
@@ -259,7 +270,7 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
     }
 
     @Override
-    public void onMessage(String msg) throws JsonProcessingException {
+    public void onMessage(String msg) throws JsonProcessingException, SocketException {
         if (requiresAuthentication(path) && msg.contains("\"op\":\"auth\"")) {
             // Check if authentication was successful
             isAuthenticated = msg.contains("\"success\":true") && msg.contains("\"op\":\"auth\"");
@@ -279,8 +290,8 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
     }
 
     @Override
-    public void onError(Throwable t) {
-        LOGGER.error("WebSocket error {} happened to stream {}", t, argNames);
+    public void onError(WebSocket webSocket, Throwable t) {
+        LOGGER.error("WebSocket error {} happened to stream {}, please try to reset this connection", t, argNames);
     }
 
     @Override
