@@ -233,7 +233,7 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
                     LOGGER.error("Trying to open a new connection in same wsocket: ", t);
                     WebsocketStreamClientImpl.this.onClose(webSocket, 0, "Socket Exception caused by server");
                 }
-                reconnect();
+                connect();
             }
 
             @Override
@@ -293,7 +293,8 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
     @Override
     public void onClose(WebSocket ws, int code, String reason) {
         LOGGER.info("WebSocket closed. Code: {}, Reason: {}", code, reason);
-        ws.close(code, reason);
+        // cancel, since we're having problems using close (it's wait for graceful shutdown)
+        ws.cancel();
         this.webSocket = null;
     }
 
@@ -325,27 +326,6 @@ public class WebsocketStreamClientImpl implements WebsocketStreamClient {
         // Start the ping thread immediately.
         startPingThread();
         return this.webSocket;
-    }
-
-    private synchronized void reconnect() {
-        try {
-            // Reconnect to the same stream
-            if (requiresAuthentication(path)) {
-                if (path.equals(BybitApiConfig.V5_TRADE) && params != null) {
-                    getTradeChannelStream(params, path);
-                } else if (argNames != null) {
-                    getPrivateChannelStream(argNames, path);
-                }
-            } else {
-                if (argNames != null) {
-                    getPublicChannelStream(argNames, path);
-                } else {
-                    LOGGER.warn("No args provided for public stream. Cannot reconnect.");
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.error("Reconnect failed", e);
-        }
     }
 
     @Override
